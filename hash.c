@@ -24,7 +24,7 @@ size_t hashing(char *str)
     return (strlen(str) + accumulate_array(str)) % HASH_ARRAY_SIZE;
 }
 
-Node** create_hash()
+Node** init_hash()
 {
     Node **hash = (Node **)calloc(HASH_ARRAY_SIZE, sizeof(Node *));
 
@@ -37,18 +37,21 @@ Node** create_hash()
     return hash;
 }
 
-void delete_hash(Node **hash)
+void free_node(Node* node)
+{
+    free(node->data);
+    free(node->key);
+    free(node);
+}
+
+void free_hash(Node **hash)
 {
     for (size_t i = 0; i < HASH_ARRAY_SIZE; ++i)
     {
         while (hash[i])
         {
-            free(hash[i]->data);
-            free(hash[i]->key);
-            hash[i]->data_length = 0;
             Node *next = hash[i]->next;
-            free(hash[i]);
-            
+            free_node(hash[i]);
             hash[i] = next;
         }
     }
@@ -76,7 +79,17 @@ void set_value(Node** hash, char* key, char *value)
 
     while(next->next)
     {
+        if (strcmp(next->key, node->key) == 0)
+            break;
         next = next->next;
+    }
+
+    if (strcmp(next->key, node->key) == 0)
+    {
+        free(next->data);
+        next->data = strdup(node->data);
+        free_node(node);
+        return;
     }
 
     next->next = node;

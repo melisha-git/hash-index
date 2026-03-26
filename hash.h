@@ -11,8 +11,8 @@ typedef struct Node
     struct Node     *next;
 } Node;
 
-Node** create_hash();
-void delete_hash(Node **hash);
+Node** init_hash();
+void free_hash(Node **hash);
 
 void set_value(Node** hash, char* key, char *value);
 char *get_value(Node** hash, char* key);
@@ -20,6 +20,7 @@ char *get_value(Node** hash, char* key);
 #ifdef INCLUDE_UTIL
 size_t accumulate_array(char *arr);
 size_t hashing(char *str);
+void free_node(Node* node);
 #endif
 
 #endif
