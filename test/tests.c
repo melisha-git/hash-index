@@ -1,4 +1,5 @@
 #include "split_test.h"
+#include "data_test.h"
 #include <stdio.h>
 #include <stddef.h>
 
@@ -27,5 +28,10 @@ int main()
     if (test_split_all_functions())
     {
         printf("PASS: test_split_all_functions\n");
+    }
+
+    if (test_data_all_functions())
+    {
+        printf("PASS: test_data_all_functions\n");
     }
 }

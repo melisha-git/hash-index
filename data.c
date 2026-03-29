@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-struct Data make_data(char *key, char *value)
+struct Data make_data(const char *key, const char *value)
 {
     struct Data data;
 
@@ -13,16 +13,29 @@ struct Data make_data(char *key, char *value)
 
     data.key = calloc(data.key_size + 1, sizeof(char));
     data.value = calloc(data.value_size + 1, sizeof(char));
+    
+    if (!data.key || !data.value)
+    {
+        destroy_data(&data);
+        return data;
+    }
+
     memcpy(data.key, key, data.key_size);
     memcpy(data.value, value, data.value_size);
 
     return data;
 }
 
-void destroy_data(struct Data data)
+void destroy_data(struct Data *data)
 {
-    free(data.key);
-    free(data.value);
-    data.key_size = 0;
-    data.value_size = 0;
+    if (data->key)
+        free(data->key);
+
+    if (data->value)
+        free(data->value);
+
+    data->key = NULL;
+    data->value = NULL;
+    data->key_size = 0;
+    data->value_size = 0;
 }

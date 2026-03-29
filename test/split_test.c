@@ -74,25 +74,26 @@ bool test_split()
 
     {
         mock_calloc_limit = 2;
+        calloc_counter = 0;
         data = split("123  456  789    q", ' ');
         result = result && check_words(data, NULL);
-        calloc_counter = 0;
 
         mock_calloc_limit = 3;
+        calloc_counter = 0;
         data = split("123 456 789", ' ');
         result = result && check_words(data, NULL);
-        calloc_counter = 0;
 
         mock_calloc_limit = 0;
+        calloc_counter = 0;
         data = split("123  456  789    q", ' ');
         result = result && check_words(data, NULL);
-        calloc_counter = 0;
 
         mock_calloc_limit = 6;
+        calloc_counter = 0;
         data = split("123            456             789   q         1", ' ');
         result = result && check_words(data, (const char *[]){"123", "456", "789", "q", "1", NULL});
         free_splits(data);
-        calloc_counter = 0;
+
         mock_calloc_limit = -1;
     }
 
