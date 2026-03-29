@@ -42,4 +42,6 @@ int main()
     {
         printf("FAIL: test_split_all_functions\n");
     }
+
+    return 0;
 }
