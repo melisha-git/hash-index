@@ -49,10 +49,7 @@ char **split(char *str, char delimether)
     result = (char **)calloc(words + 1, sizeof(char *));
 
     if (!result)
-    {
-        perror("split");
         return NULL;
-    }
 
     for (; i < strlen(str); ++i)
     {
@@ -81,8 +78,7 @@ char **split(char *str, char delimether)
 
         if (!result[word_idx])
         {
-            // free all
-
+            free_splits(result);
             return NULL;
         }
 

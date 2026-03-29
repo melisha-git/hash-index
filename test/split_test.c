@@ -5,24 +5,16 @@
 #include "split_test.h"
 #include <stdlib.h>
 
-void* my_malloc(size_t size, size_t sz)
-{
-    static int counter = 0; // Статическая переменная сохраняет значение между вызовами
-    counter++;
-
-    if (counter == 3) {
-        printf("[DEBUG] Имитация отказа: 3-е выделение вернуло NULL\n");
-        return NULL;
-    }
-
-    // Вызываем настоящий malloc
-    void* ptr = calloc(size, sz);
-    printf("[DEBUG] Вызов %d: выделено %zu байт по адресу %p\n", counter, size, ptr);
-    return ptr;
-}
+extern int mock_calloc_limit;
+extern int calloc_counter;
 
 bool check_words(char **a, const char **b)
 {
+    if (!a && !b)
+    {
+        return true;
+    }
+
     for (;a && (*a) && b && (*b); a++, b++)
     {
         if (strcmp(*a, *b) != 0)
@@ -79,6 +71,30 @@ bool test_split()
 {
     bool result = true;
     char **data;
+
+    {
+        mock_calloc_limit = 2;
+        data = split("123  456  789    q", ' ');
+        result = result && check_words(data, NULL);
+        calloc_counter = 0;
+
+        mock_calloc_limit = 3;
+        data = split("123 456 789", ' ');
+        result = result && check_words(data, NULL);
+        calloc_counter = 0;
+
+        mock_calloc_limit = 0;
+        data = split("123  456  789    q", ' ');
+        result = result && check_words(data, NULL);
+        calloc_counter = 0;
+
+        mock_calloc_limit = 6;
+        data = split("123            456             789   q         1", ' ');
+        result = result && check_words(data, (const char *[]){"123", "456", "789", "q", "1", NULL});
+        free_splits(data);
+        calloc_counter = 0;
+        mock_calloc_limit = -1;
+    }
 
     data = split("123 456 789", ' ');
     result = result && check_words(data, (const char *[]){"123", "456", "789", NULL});
