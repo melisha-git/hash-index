@@ -9,22 +9,18 @@ bool create_file(int *fd, char* path)
 {
     delete_file(*fd);
     (*fd) = open(path, O_RDWR | O_CREAT | O_APPEND, 0666);
-    
-    if ((*fd) == -1)
-    {
-        perror("open");
-        return false;
-    }
 
-    return true;
+    return (*fd) != -1;
 }
 
-void delete_file(int fd)
+bool delete_file(int fd)
 {
     if (fd != -1)
     {
-        close(fd);
+        return close(fd) == 0;
     }
+
+    return false;
 }
 
 off_t write_to_file(int fd, struct Data data)
@@ -52,22 +48,56 @@ off_t write_to_file(int fd, struct Data data)
 struct Data read_file(int fd, off_t offset)
 {
     struct Data result;
+    size_t bytes;
     result.key = NULL;
     result.value = NULL;
 
     if (fd == -1)
     {
-        return result;
+        goto cleanup;
     }
 
-    lseek(fd, offset, SEEK_SET);
-    read(fd, &result.key_size, sizeof(size_t));
-    result.key = calloc(result.key_size, sizeof(char));
-    read(fd, result.key, result.key_size);
-    
-    read(fd, &result.value_size, sizeof(size_t));
-    result.value = calloc(result.value_size, sizeof(char));
-    read(fd,result.value, result.value_size);
+    if (lseek(fd, offset, SEEK_SET) == -1)
+    {
+        goto cleanup;
+    }
 
+    if (read(fd, &result.key_size, sizeof(size_t)) == -1)
+    {
+        goto cleanup;
+    }
+
+    result.key = calloc(result.key_size, sizeof(char));
+
+    if (result.key == NULL)
+    {
+        goto cleanup;
+    }
+
+    if (read(fd, result.key, result.key_size) == -1)
+    {
+        goto cleanup;
+    }
+
+    if (read(fd, &result.value_size, sizeof(size_t)) == -1)
+    {
+        goto cleanup;
+    }
+
+    result.value = calloc(result.value_size, sizeof(char));
+
+    if (result.value == NULL)
+    {
+        goto cleanup;
+    }
+
+    if (read(fd,result.value, result.value_size) == -1)
+    {
+        goto cleanup;
+    }
+
+    return result;
+cleanup:
+    destroy_data(&result);
     return result;
 }

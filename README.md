@@ -4,7 +4,7 @@ TODO:
     * [x] split
     * [x] data
     * [x] hash
-    * [ ] disk_logic
+    * [x] disk_logic
     * [ ] command_handlers
 - Add pipes
     * Run all tests
