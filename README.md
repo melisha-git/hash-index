@@ -5,7 +5,6 @@ TODO:
     * [x] data
     * [x] hash
     * [x] disk_logic
-    * [ ] command_handlers
 - Add pipes
     * Run all tests
     * Run all tests in valgrind
