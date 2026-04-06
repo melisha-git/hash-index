@@ -47,7 +47,7 @@ int handle_command(size_t argc, char** argv, Node** hash)
 
         struct Data data = make_data(key, value);
         off_t offset = write_to_file(fd, data);
-        destroy_data(data);
+        destroy_data(&data);
 
         char buf[20];
         sprintf(buf, "%ld", offset);
@@ -58,7 +58,7 @@ int handle_command(size_t argc, char** argv, Node** hash)
     {
         off_t offset = atoll(get_value(hash, key));
         struct Data data = read_file(fd, offset);
-        destroy_data(data);
+        destroy_data(&data);
         break;
     }
     default:
