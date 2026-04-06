@@ -6,12 +6,15 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
 
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Build project
         run: make
@@ -20,7 +23,7 @@ jobs:
         run: make tests
 
       - name: Upload binary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: build-output
           path: a.out
@@ -30,7 +33,7 @@ jobs:
     needs: build
     steps:
       - name: Download binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: build-output
 
@@ -45,7 +48,7 @@ jobs:
     needs: build
     steps:
       - name: Download binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: build-output
 
