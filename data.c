@@ -6,10 +6,15 @@
 
 struct Data make_data(const char *key, const char *value)
 {
-    struct Data data;
+    struct Data data = {0, 0, NULL, NULL};
+
+    if (key == NULL)
+    {
+        return data;
+    }
 
     data.key_size = strlen(key);
-    data.value_size = strlen(value);
+    data.value_size = value == NULL ? 0 : strlen(value);
 
     data.key = calloc(data.key_size + 1, sizeof(char));
     data.value = calloc(data.value_size + 1, sizeof(char));

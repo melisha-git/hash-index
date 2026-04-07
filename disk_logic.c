@@ -49,6 +49,8 @@ struct Data read_file(int fd, off_t offset)
 {
     struct Data result;
     size_t bytes;
+    result.key_size = 0;
+    result.value_size = 0;
     result.key = NULL;
     result.value = NULL;
 
@@ -62,12 +64,12 @@ struct Data read_file(int fd, off_t offset)
         goto cleanup;
     }
 
-    if (read(fd, &result.key_size, sizeof(size_t)) == -1)
+    if (read(fd, &result.key_size, sizeof(size_t)) != sizeof(size_t))
     {
         goto cleanup;
     }
 
-    result.key = calloc(result.key_size, sizeof(char));
+    result.key = calloc(result.key_size + 1, sizeof(char));
 
     if (result.key == NULL)
     {
@@ -79,12 +81,12 @@ struct Data read_file(int fd, off_t offset)
         goto cleanup;
     }
 
-    if (read(fd, &result.value_size, sizeof(size_t)) == -1)
+    if (read(fd, &result.value_size, sizeof(size_t)) != sizeof(size_t))
     {
         goto cleanup;
     }
 
-    result.value = calloc(result.value_size, sizeof(char));
+    result.value = calloc(result.value_size + 1, sizeof(char));
 
     if (result.value == NULL)
     {

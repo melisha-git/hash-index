@@ -60,6 +60,13 @@ bool test_make_data()
     result = result && cmpdata(data, (struct Data){3, 0, "123", ""});
     destroy_data(&data);
 
+    data = make_data("123", NULL);
+    result = result && cmpdata(data, (struct Data){3, 0, "123", ""});
+    destroy_data(&data);
+
+    data = make_data(NULL, "123");
+    result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
+
     return result;
 }
 
