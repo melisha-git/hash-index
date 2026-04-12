@@ -31,40 +31,40 @@ bool test_make_data()
     {
         mock_alloc_limit = 0;
         alloc_counter = 0;
-        data = make_data("qwerty", "zxc01");
+        data = make_data("qwerty", "zxc01", UNDEFINED);
         result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
 
         mock_alloc_limit = 1;
         alloc_counter = 0;
-        data = make_data("qwerty", "zxc01");
+        data = make_data("qwerty", "zxc01", UNDEFINED);
         result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
 
         mock_alloc_limit = 2;
         alloc_counter = 0;
-        data = make_data("qwerty", "zxc01");
+        data = make_data("qwerty", "zxc01", UNDEFINED);
         result = result && cmpdata(data, (struct Data){6, 5, "qwerty", "zxc01"});
         destroy_data(&data);
 
         mock_alloc_limit = -1;
     }
 
-    data = make_data("12", "12345");
+    data = make_data("12", "12345", UNDEFINED);
     result = result && cmpdata(data, (struct Data){2, 5, "12", "12345"});
     destroy_data(&data);
 
-    data = make_data("", "12345678");
+    data = make_data("", "12345678", UNDEFINED);
     result = result && cmpdata(data, (struct Data){0, 8, "", "12345678"});
     destroy_data(&data);
 
-    data = make_data("123", "");
+    data = make_data("123", "", UNDEFINED);
     result = result && cmpdata(data, (struct Data){3, 0, "123", ""});
     destroy_data(&data);
 
-    data = make_data("123", NULL);
+    data = make_data("123", NULL, UNDEFINED);
     result = result && cmpdata(data, (struct Data){3, 0, "123", ""});
     destroy_data(&data);
 
-    data = make_data(NULL, "123");
+    data = make_data(NULL, "123", UNDEFINED);
     result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
 
     return result;
@@ -75,15 +75,15 @@ bool test_destroy_data()
     bool result = true;
     struct Data data;
 
-    data = make_data("12", "12345");
+    data = make_data("12", "12345", UNDEFINED);
     destroy_data(&data);
     result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
 
-    data = make_data("", "12345678");
+    data = make_data("", "12345678", UNDEFINED);
     destroy_data(&data);
     result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
 
-    data = make_data("123", "");
+    data = make_data("123", "", UNDEFINED);
     destroy_data(&data);
     result = result && cmpdata(data, (struct Data){0, 0, NULL, NULL});
 
